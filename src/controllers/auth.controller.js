@@ -74,4 +74,5 @@ async function loginUser(req, res) {
     message: "User login",
   });
 }
+
 module.exports = { registerUser, loginUser };
