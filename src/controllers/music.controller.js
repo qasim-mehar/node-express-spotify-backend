@@ -1,4 +1,5 @@
 const musicModel = require("../models/music.model");
+const albumModel = require("../models/album.model");
 const jwt = require("jsonwebtoken");
 const { uploadFile } = require("../services/storage.service");
 
@@ -44,4 +45,26 @@ async function createMusic(req, res) {
   }
 }
 
+async function createAlbum(req, res) {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({
+      message: "Unothorized",
+    });
+  }
+
+  try {
+    //Authorization
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded !== "artist") {
+      return res.status(401).json({
+        message: "Only artist can upload an album",
+      });
+    }
+  } catch (err) {
+    return res.status(401).json({
+      message: "Unothorized",
+    });
+  }
+}
 module.exports = { createMusic };
