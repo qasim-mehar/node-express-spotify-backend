@@ -5,11 +5,13 @@ const albumSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  musics: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "music",
-    required: true,
-  },
+  musics: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "music",
+      required: true,
+    },
+  ],
   artist: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
