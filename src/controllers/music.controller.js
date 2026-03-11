@@ -56,15 +56,31 @@ async function createAlbum(req, res) {
   try {
     //Authorization
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded !== "artist") {
-      return res.status(401).json({
+    if (decoded.role !== "artist") {
+      return res.status(403).json({
         message: "Only artist can upload an album",
       });
     }
+
+    //Creating an album
+    const { title, musicIds } = req.body;
+    const album = await albumModel.create({
+      title,
+      musics: musicIds,
+      artist: decoded.id,
+    });
+
+    res.status(201).json({
+      message: "Album created successfully",
+      id: album._id,
+      title: album.title,
+      musics: album.musics,
+      artist: album.artist,
+    });
   } catch (err) {
     return res.status(401).json({
       message: "Unothorized",
     });
   }
 }
-module.exports = { createMusic };
+module.exports = { createMusic, createAlbum };
