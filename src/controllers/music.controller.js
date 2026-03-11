@@ -49,13 +49,14 @@ async function createAlbum(req, res) {
   const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({
-      message: "Unothorized",
+      message: "Unauthorized",
     });
   }
 
   try {
     //Authorization
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decoded);
     if (decoded.role !== "artist") {
       return res.status(403).json({
         message: "Only artist can upload an album",
@@ -63,10 +64,10 @@ async function createAlbum(req, res) {
     }
 
     //Creating an album
-    const { title, musicIds } = req.body;
+    const { title, musics } = req.body;
     const album = await albumModel.create({
       title,
-      musics: musicIds,
+      musics: musics,
       artist: decoded.id,
     });
 
@@ -78,8 +79,9 @@ async function createAlbum(req, res) {
       artist: album.artist,
     });
   } catch (err) {
-    return res.status(401).json({
-      message: "Unothorized",
+    console.log(err);
+    res.status(401).json({
+      message: "Unauthorized",
     });
   }
 }
