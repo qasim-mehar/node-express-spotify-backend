@@ -13,6 +13,8 @@ async function authArtist(req, res, next) {
         message: "You don't have access",
       });
     }
+    //asign decoded values to req.user so that we can access decoded.id in controllers
+    req.user = decoded;
     next();
   } catch (err) {
     res.status(401).json({
