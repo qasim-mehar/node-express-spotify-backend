@@ -55,7 +55,11 @@ async function getAllMusics(req, res) {
 }
 
 async function getAllAlbums(req, res) {
-  const album = await albumModel.find().populate("musics");
+  //select only title and artist and further in artist only username and email
+  const album = await albumModel
+    .find()
+    .select("title artist")
+    .populate("artist", "username email");
   res.status(200).json({
     message: "Albums fetched successfully",
     album,
